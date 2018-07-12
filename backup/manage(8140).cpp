@@ -46,7 +46,7 @@ int manage::create(int *msgid)
 }
 
 
-int manage::msg_handle()
+int manege::msg_handle()
 {
 	int ret=0;
 	err=parent_msg.recv_data(parent_msgid,1,parent_data);
@@ -60,7 +60,6 @@ int manage::msg_handle()
 		case '0':ret=client_add();break;
 		case '1':ret=talkback();break;
 		case '2':ret=client_delete();break;
-		case '3':manage_exit();
 		default:parent_back_data[0]='2';
 	}
 	
@@ -105,9 +104,6 @@ int manage::client_add()
 		retrun -1;
 	}
 	printf("manage child add sucessful\n");
-	memset(parent_back_data,'0',PARENT_DATA_LEN);
-	parent_back_data[0]='0';
-	parent_back_data[1]=(char)num;
 	
 	return 0;
 }
@@ -132,13 +128,6 @@ int manege::client_delete()
 	client_fd[parent_data[1]]==-1;
 	return 0;
 }
-
-int manage_exit()
-{
-	/*关闭所有子进程*/
-	server_sock.tcp_close();
-}
-
 
 int manege::num_get()
 {

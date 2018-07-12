@@ -26,17 +26,15 @@ class manage
 		message child_msg;
 		message parent_msg;
 
-		
+		int msg_handle();
 		int client_add();//tcp_accept  p_fork
-		int client_delete();
+		//int client_delete();
 		int talkback();
-		int manage_exit();
 		int num_get();
 
 	public:
 		manage();
-		int create(int *msgid);
-		int msg_handle();
+		int create();
 
 }
 
