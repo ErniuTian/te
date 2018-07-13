@@ -1,4 +1,4 @@
-#include <usr.h>
+#include "usr.h"
 
 int main()
 {
@@ -23,7 +23,7 @@ int main()
 	err=my.connect_test(box_id);
 	if(err==-1)
 	{
-		prinft("ERROR:main connect test error\n");
+		printf("ERROR:main connect test error\n");
 		return -1;
 	}
 	printf("main my connect_test successful\n");

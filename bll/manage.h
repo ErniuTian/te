@@ -2,9 +2,9 @@
 #define MANAGE_H
 
 #include <iostream>
-#include "server.h"
-#include "process.h"
-#include "message.h"
+#include "../dal/tcp_link.h"
+#include "../dal/process.h"
+#include "../dal/message.h"
 #include <string.h>
 
 #define CLIENT_NUM 5
@@ -13,6 +13,7 @@
 class manage
 {
 	private:
+		int err;
 		int pid;
 		int num;
 		int client_fd[CLIENT_NUM];
@@ -22,7 +23,7 @@ class manage
 		char parent_data[PARENT_DATA_LEN];
 		char parent_back_data[PARENT_DATA_LEN];
 		tcp_link server_sock;
-		process child[CLIENT_NUM];
+		Process child[CLIENT_NUM];
 		message child_msg;
 		message parent_msg;
 
@@ -38,6 +39,6 @@ class manage
 		int create(int *msgid);
 		int msg_handle();
 
-}
+};
 
 #endif

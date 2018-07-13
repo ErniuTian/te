@@ -1,15 +1,14 @@
 #ifndef USR_H
-#defien USR_H
+#define USR_H
 
 #include <iostream>
-#include "manage.h"
+#include "../bll/manage.h"
 
 class usr
 {
 	private:
 		int err;
 		int u_msgid;
-		int box_id[CLIENT_NUM];
 		int box_id[CLIENT_NUM];
 		
 		manage manager;
@@ -27,6 +26,6 @@ class usr
 		int sensor_delete(char box_id,char sensor_id);
 		int data_get(char box_id,char sensor_id,char *data);
 		int data_get_loop(char box_id,char sensor_id,char *data,int time);
-}
+};
 
 #endif

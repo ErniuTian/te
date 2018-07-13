@@ -1,7 +1,7 @@
 VPATH=app:bll:dal
 OBJSDIR=obj
 TARGET=main
-OBJS=main.o process.o tcp_link.o message.o
+OBJS=main.o process.o tcp_link.o message.o manage.o usr.o
 RM=rm -f
 
 $(TARGET):$(OBJSDIR) $(OBJS)

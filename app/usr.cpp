@@ -1,4 +1,4 @@
-#include <usr.h>
+#include "usr.h"
 
 usr::usr()
 {
@@ -72,9 +72,9 @@ int usr::connect_test(char box_id)
 	data[3]='2';
 	data[4]=':';
 	data[5]=':';
-	data[6]='ff';
-	data[7]='01';
-	data[8]='ff';
+	data[6]='f';
+	data[7]='1';
+	data[8]='f';
 	data[9]='\n';
 	data[10]='\r';
 	main_msg.send_data(u_msgid, 1, data);
@@ -89,25 +89,25 @@ int usr::connect_test(char box_id)
 }
 
 
-int usr::box_delete(int box_id)
+int usr::box_delete(char box_id)
 {
 }
-int usr::param_set(int box_id,char *param)
-{
-}
-
-int usr::sensor_add(int box_id,int sensor_id,char *param,char *data)
-{
-}
-int usr::sensor_delete(int box_id,int sensor_id)
+int usr::param_set(char box_id,char *param)
 {
 }
 
-int usr::data_get(int box_id,int sensor_id,char *data)
+int usr::sensor_add(char box_id,char sensor_id,char *param,char *data)
+{
+}
+int usr::sensor_delete(char box_id,char sensor_id)
 {
 }
 
-int usr::data_get_loop(int box_id,int sensor_id,char *data,int time)
+int usr::data_get(char box_id,char sensor_id,char *data)
+{
+}
+
+int usr::data_get_loop(char box_id,char sensor_id,char *data,int time)
 {
 }
 

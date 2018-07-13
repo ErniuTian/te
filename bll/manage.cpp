@@ -1,7 +1,8 @@
 #include <iostream>
-#include "tcp_link.h"
-#include "process.h"
-#include "message.h"
+//#include "tcp_link.h"
+//#include "process.h"
+//#include "message.h"
+#include "manage.h"
 #include <string.h>
 
 manage::manage()
@@ -22,7 +23,7 @@ int manage::create(int *msgid)
 {
 	err=server_sock.tcp_create();
 	printf("ERROR:manage tcp link create error\n");
-	retrun -1;
+	return -1;
 
 	child_msgid=child_msg.msg_create();
 	if(child_msgid==-1)
@@ -55,7 +56,7 @@ int manage::msg_handle()
 		printf("ERROR:manage msg handle msg recv data error\n");
 		return -1;
 	}
-	swicth(parent_data[0])
+	switch(parent_data[0])
 	{
 		case '0':ret=client_add();break;
 		case '1':ret=talkback();break;
@@ -102,7 +103,7 @@ int manage::client_add()
 	if(err==-1)
 	{
 		printf("ERROR:manage client_add error\n");
-		retrun -1;
+		return -1;
 	}
 	printf("manage child add sucessful\n");
 	memset(parent_back_data,'0',PARENT_DATA_LEN);
@@ -122,7 +123,7 @@ int manage::talkback()
 	return 0;
 }
 
-int manege::client_delete()
+int manage::client_delete()
 {
 	err=talkback();
 	if(err==-1)
@@ -133,14 +134,14 @@ int manege::client_delete()
 	return 0;
 }
 
-int manage_exit()
+int manage::manage_exit()
 {
 	/*关闭所有子进程*/
 	server_sock.tcp_close();
 }
 
 
-int manege::num_get()
+int manage::num_get()
 {
 	int i;
 	for(i=0;i<CLIENT_NUM;i++)
