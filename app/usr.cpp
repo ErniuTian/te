@@ -14,28 +14,28 @@ usr::usr()
 int usr::init()
 {
 	pid_t pid;
-	pid=fork();
-	if(pid==-1)
-	{
-		printf("ERROR:usr fork error\n");
-		return -1;
-	}
-	if(pid==0)
-	{
 		u_msgid=manager.create();
 		if(u_msgid==-1)
 		{
 			printf("ERROR:usr get a bad u_msgid\n");
 			exit(-1);
 		}
-		printf("usr manage create successful\n");
+		printf("usr manage create successful u_msgid:%d\n",u_msgid);
+	pid=fork();
+	if(pid==-1)
+	{
+		printf("ERROR:usr fork error\n");
+		return -1;
+	}
 
+	if(pid==0)
+	{
 		printf("usr waiting for msg...\n");
 	//	while(1)
 	//	{
 			manager.msg_handle();
 	//	}
-	//	exit(0);
+		exit(0);
 	}
 	printf("usr init successful\n");
 	return 0;

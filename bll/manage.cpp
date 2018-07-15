@@ -40,7 +40,7 @@ int manage::create()
 		printf("ERROR:manage get a bad child_msgid\n");
 		return -1;
 	}
-	printf("manage child msg create successful\n");
+	printf("manage child msg create successful:%d\n",child_msgid);
 	
 	parent_msgid=parent_msg.msg_create(keypath2);
 	if(parent_msgid==-1)
@@ -48,7 +48,7 @@ int manage::create()
 		printf("ERROR:manage get a bad parent_msgid\n");
 		return -1;
 	}
-	printf("manage parent msg create successful\n");
+	printf("manage parent msg create successful:%d\n",parent_msgid);
 	/*
 	msgid=&parent_msgid;
 	while(1)
@@ -167,7 +167,7 @@ int manage::num_get()
 	int i;
 	for(i=0;i<CLIENT_NUM;i++)
 	{
-		if(client_fd[i]!=-1)
+		if(client_fd[i]==-1)
 			return i;
 	}
 	return -1;
