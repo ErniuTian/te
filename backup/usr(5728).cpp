@@ -22,20 +22,23 @@ int usr::init()
 	}
 	if(pid==0)
 	{
-		u_msgid=manager.create();
+		err=manager.create(&u_msgid);
+		if(err==-1)
+		{
+			printf("ERROR:usr manage create error\n");
+			return -1;
+		}
 		if(u_msgid==-1)
 		{
 			printf("ERROR:usr get a bad u_msgid\n");
-			exit(-1);
+			return -1;
 		}
-		printf("usr manage create successful\n");
 
-		printf("usr waiting for msg...\n");
-	//	while(1)
-	//	{
+		while(1)
+		{
 			manager.msg_handle();
-	//	}
-	//	exit(0);
+		}
+		return 0;
 	}
 	printf("usr init successful\n");
 	return 0;
@@ -46,20 +49,9 @@ int usr::box_add(char *box_id)
 {
 	char data[PARENT_DATA_LEN];
 	memset(data,'0',PARENT_DATA_LEN);
-	printf("usr box_add data:%s\n",data);
 	//memset(box_id,'0')
-	err=main_msg.send_data(u_msgid, 1, data);
-	if(err==-1)
-	{
-		printf("ERROR:usr box_add msg send_data error\n");
-		return -1;
-	}
-	err=main_msg.recv_data(u_msgid, 2, data);
-	if(err==-1)
-	{
-		printf("ERROR:usr box_add msg recv_data error\n");
-		return -1;
-	}
+	main_msg.send_data(u_msgid, 1, data);
+	main_msg.recv_data(u_msgid, 2, data);
 	if(data[0]=='1')
 	{
 		printf("box add error\n");
@@ -99,10 +91,6 @@ int usr::connect_test(char box_id)
 
 int usr::box_delete(char box_id)
 {
-/*
-子进程关闭客户端
-子进程退出
-*/
 }
 int usr::param_set(char box_id,char *param)
 {

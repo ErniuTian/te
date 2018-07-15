@@ -36,7 +36,7 @@ class manage
 
 	public:
 		manage();
-		int create();
+		int create(int *msgid);
 		int msg_handle();
 
 };

@@ -19,37 +19,24 @@ manage::manage()
 }
 
 /*create a tcp link*/
-int manage::create()
+int manage::create(int *msgid)
 {
-	char *keypath1,*keypath2;
-	char key1[]="./key1";
-	char key2[]="./key2";
-	keypath1=key1;
-	keypath2=key2;
 	err=server_sock.tcp_create();
-	if(err==-1)
-	{
-		printf("ERROR:manage tcp link create error\n");
-		return -1;
-	}
-	printf("manage tcp create successful\n");
+	printf("ERROR:manage tcp link create error\n");
+	return -1;
 
-	child_msgid=child_msg.msg_create(keypath1);
+	child_msgid=child_msg.msg_create();
 	if(child_msgid==-1)
 	{
 		printf("ERROR:manage get a bad child_msgid\n");
 		return -1;
 	}
-	printf("manage child msg create successful\n");
-	
-	parent_msgid=parent_msg.msg_create(keypath2);
+	parent_msgid=parent_msg.msg_create();
 	if(parent_msgid==-1)
 	{
 		printf("ERROR:manage get a bad parent_msgid\n");
 		return -1;
 	}
-	printf("manage parent msg create successful\n");
-	/*
 	msgid=&parent_msgid;
 	while(1)
 	{
@@ -57,14 +44,11 @@ int manage::create()
 		msg_handle();
 	}
 	return 0;
-	*/
-	return parent_msgid;
 }
 
 
 int manage::msg_handle()
 {
-	
 	int ret=0;
 	err=parent_msg.recv_data(parent_msgid,1,parent_data);
 	if(err==-1)
@@ -94,7 +78,6 @@ int manage::msg_handle()
 		printf("ERROR:manage msg send data error\n");
 		return -1;
 	}
-	
 	return 0;
 }
 
@@ -153,11 +136,7 @@ int manage::client_delete()
 
 int manage::manage_exit()
 {
-	/*
-	关闭所有子进程
-	删除消息队列
-	关闭tcp服务器端口
-	*/
+	/*关闭所有子进程*/
 	server_sock.tcp_close();
 }
 
