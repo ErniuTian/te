@@ -62,7 +62,7 @@ int usr::box_add(char *box_id)
 	}
 	if(data[0]=='1')
 	{
-		printf("box add error\n");
+		printf("ERROR:usr box add error\n");
 		return -1;
 	}
 	printf("box add successful\n");
