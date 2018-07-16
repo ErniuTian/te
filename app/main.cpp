@@ -13,7 +13,7 @@ int main()
 		return -1;
 	}
 	printf("main my init successful\n");
-	sleep(5);
+	sleep(3);
 
 	err=my.box_add(&box_id);
 	if(err==-1)
@@ -22,6 +22,9 @@ int main()
 		return -1;
 	}
 	printf("main my box_add successful\n");
+
+	sleep(1);
+	printf("main connect testing...\n");
 	err=my.connect_test(box_id);
 	if(err==-1)
 	{
