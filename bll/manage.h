@@ -8,7 +8,6 @@
 #include <string.h>
 
 #define CLIENT_NUM 5
-#define PARENT_DATA_LEN CHILD_DATA_LEN+2
 
 class manage
 {
@@ -19,9 +18,9 @@ class manage
 		int client_fd[CLIENT_NUM];
 		int child_msgid;
 		int parent_msgid;
-		char child_data[DATA_LEN];
-		char parent_data[PARENT_DATA_LEN];
-		char parent_back_data[PARENT_DATA_LEN];
+		int child_data[CHILD_DATA_LEN];
+		int parent_data[DATA_LEN];
+		int parent_back_data[DATA_LEN];
 		tcp_link server_sock;
 		Process child[CLIENT_NUM];
 		message child_msg;

@@ -10,6 +10,7 @@ class usr
 		int err;
 		int u_msgid;
 		int box_id[CLIENT_NUM];
+//		int data[DATA_LEN];
 		
 		manage manager;
 		message main_msg;
@@ -18,8 +19,8 @@ class usr
 	public:
 		usr();
 		int init(); 
-		int connect_test(char box_id);
-		int box_add(char *box_id);
+		int connect_test(int box_id);
+		int box_add();
 		int box_delete(char box_id);
 		int param_set(char box_id,char *param);
 		int sensor_add(char box_id,char sensor_id,char *param,char *data);

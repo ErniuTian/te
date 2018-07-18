@@ -9,18 +9,25 @@ usr::usr()
 	{
 		box_id[i]=-1;
 	}
+	/*
+	for(i=0;i<DATA_LEN;i++)
+	{
+		data[i]=0x00;
+	}
+	*/
 }
 
 int usr::init()
 {
+	printf("usr initing...\n");
 	pid_t pid;
-		u_msgid=manager.create();
-		if(u_msgid==-1)
-		{
-			printf("ERROR:usr get a bad u_msgid\n");
-			exit(-1);
-		}
-		printf("usr manage create successful u_msgid:%d\n",u_msgid);
+	u_msgid=manager.create();
+	if(u_msgid==-1)
+	{
+		printf("ERROR:usr get a bad u_msgid\n");
+		exit(-1);
+	}
+	printf("usr manage create successful u_msgid:%d\n",u_msgid);
 	pid=fork();
 	if(pid==-1)
 	{
@@ -33,67 +40,109 @@ int usr::init()
 		printf("usr waiting for msg...\n");
 		//while(1)
 		//{
-		//	sleep(1);
+			//sleep(1);
 			manager.msg_handle();
 		//}
 		exit(0);
 	}
 	printf("usr init successful\n");
-	return 0;
-	
+	return u_msgid;
 }
 
-int usr::box_add(char *box_id)
+int usr::box_add()
 {
-	char data[PARENT_DATA_LEN];
-	memset(data,'0',PARENT_DATA_LEN);
-	printf("usr box_add data:%s\n",data);
-	//memset(box_id,'0')
-	err=main_msg.send_data(u_msgid, 1, data);
+	int data[DATA_LEN];
+	int i;
+	for(i=0;i<DATA_LEN;i++)
+	{
+		data[i]=0x00;
+	}
+	err=main_msg.send_data(u_msgid, 1, data,DATA_LEN);
 	if(err==-1)
 	{
 		printf("ERROR:usr box_add msg send_data error\n");
 		return -1;
 	}
-	err=main_msg.recv_data(u_msgid, 2, data);
+	printf("usr box_add msg send data:");
+	for(i=0;i<DATA_LEN;i++)
+	{
+		printf("%02x ",data[i]);
+	}
+	printf("\n");
+
+	err=main_msg.recv_data(u_msgid, 2, data,DATA_LEN);
 	if(err==-1)
 	{
 		printf("ERROR:usr box_add msg recv_data error\n");
 		return -1;
 	}
-	if(data[0]=='1')
+	printf("usr box_add msg recv:");
+	for(i=0;i<DATA_LEN;i++)
+	{
+		printf("%02x ",data[i]);
+	}
+	printf("\n");
+
+	if(data[0]==0x01)
 	{
 		printf("ERROR:usr box add error\n");
 		return -1;
 	}
 	printf("box add successful\n");
-	strncpy(box_id,data+1,1);
+	//strncpy(box_id,data+1,1);
+	//box_id=data[1];
 	//strncpy(box_addr,data+5,1);
-	return 0;
+	return data[1];
 }
 
-int usr::connect_test(char box_id)
+int usr::connect_test(int box_id)
 {
-	char data[PARENT_DATA_LEN];
-	memset(data,'0',PARENT_DATA_LEN);
-	data[0]='1';
-	data[2]=box_id;
-	data[3]='2';
-	data[4]=':';
-	data[5]=':';
-	data[6]='f';
-	data[7]='1';
-	data[8]='f';
-	data[9]='\n';
-	data[10]='\r';
-	main_msg.send_data(u_msgid, 1, data);
-	main_msg.recv_data(u_msgid, 2, data);
-	if(data[0]=='1')
+	int data[DATA_LEN];
+	int i;
+	data[0]=0x01;
+	data[1]=box_id;
+	data[2]=0x02;
+	data[3]=0x3a;
+	data[4]=0x3a;
+	data[5]=0x0f;
+	/*
+	data[6]=0x01;
+	data[7]=0x0f;
+	data[8]=0x0d;
+	data[9]=0x0a;
+	*/
+	err=main_msg.send_data(u_msgid, 1, data,DATA_LEN);
+	if(err==-1)
 	{
-		printf("box %c connect test error\n",box_id);
+		printf("usr connect_test send data error\n");
 		return -1;
 	}
-	printf("box %c connect test succesful\n",box_id);
+	printf("usr connect test send msg:");
+	for(i=0;i<DATA_LEN;i++)
+	{
+		printf("%02x ",data[i]);
+	}
+	printf("\n");
+
+	err=main_msg.recv_data(u_msgid, 2, data,DATA_LEN);
+	if(err==-1)
+	{
+		printf("usr connect_test recv msg error\n");
+		return -1;
+	}
+	printf("usr connect test recv msg:");
+	for(i=0;i<DATA_LEN;i++)
+	{
+		printf("%02x ",data[i]);
+	}
+	printf("\n");
+
+	if(data[0]==0x01)
+	{
+		printf("usr box %d connect test error\n",box_id);
+		return -1;
+	}
+	printf("usr box %d connect test succesful\n",box_id);
 	return 0;
 }
 

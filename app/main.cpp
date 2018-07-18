@@ -3,7 +3,7 @@
 int main()
 {
 	usr my;
-	char box_id;
+	int box_id;
 	int err;
 
 	err=my.init();
@@ -15,8 +15,8 @@ int main()
 	printf("main my init successful\n");
 	sleep(3);
 
-	err=my.box_add(&box_id);
-	if(err==-1)
+	box_id=my.box_add();
+	if(box_id==-1)
 	{
 		printf("ERROR:main box add error\n");
 		return -1;
