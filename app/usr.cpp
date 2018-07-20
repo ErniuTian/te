@@ -38,11 +38,14 @@ int usr::init()
 	if(pid==0)
 	{
 		printf("usr waiting for msg...\n");
-		while(1)
-		{
+//		while(1)
+//		{
+		printf("usr msg_handle1\n");
+		manager.msg_handle();
 			sleep(1);
+		printf("usr msg_handle2\n");
 			manager.msg_handle();
-		}
+//		}
 		exit(0);
 	}
 	printf("usr init successful\n");

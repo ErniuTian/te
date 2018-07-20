@@ -151,9 +151,10 @@ int manage::client_add()
 
 int manage::talkback()
 {
+	printf("manage talkbacking...\n");
 	int i;
 	num=parent_data[1];
-	memcpy(child_data,parent_data+1,CHILD_DATA_LEN*sizeof(int));
+	memcpy(child_data,parent_data+1,CHILD_DATA_LEN);
 	err=child_msg.send_data(child_msgid, num, child_data,CHILD_DATA_LEN);
 	if(err==-1)
 	{
@@ -180,7 +181,7 @@ int manage::talkback()
 	}
 	printf("\n");
 
-	memcpy(parent_back_data+2,child_data,CHILD_DATA_LEN*sizeof(int));
+	memcpy(parent_back_data+2,child_data,CHILD_DATA_LEN);
 	parent_back_data[1]=num;
 	return 0;
 }
@@ -210,7 +211,7 @@ int manage::manage_exit()
 int manage::num_get()
 {
 	int i;
-	for(i=0;i<CLIENT_NUM;i++)
+	for(i=1;i<CLIENT_NUM;i++)
 	{
 		if(client_fd[i]==-1)
 			return i;
