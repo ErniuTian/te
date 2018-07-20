@@ -67,7 +67,7 @@ int manage::create()
 
 int manage::msg_handle()
 {
-	
+	printf("manage msg recving...\n");	
 	int ret=0;
 	int i;
 	err=parent_msg.recv_data(parent_msgid,1,parent_data,DATA_LEN);

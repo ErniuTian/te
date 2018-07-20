@@ -38,11 +38,11 @@ int usr::init()
 	if(pid==0)
 	{
 		printf("usr waiting for msg...\n");
-		//while(1)
-		//{
-			//sleep(1);
+		while(1)
+		{
+			sleep(1);
 			manager.msg_handle();
-		//}
+		}
 		exit(0);
 	}
 	printf("usr init successful\n");
@@ -88,7 +88,7 @@ int usr::box_add()
 		printf("ERROR:usr box add error\n");
 		return -1;
 	}
-	printf("box add successful\n");
+	printf("usr box add successful\n");
 	//strncpy(box_id,data+1,1);
 	//box_id=data[1];
 	//strncpy(box_addr,data+5,1);
