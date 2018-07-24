@@ -52,9 +52,9 @@ int usr::init()
 	return u_msgid;
 }
 
-char usr::box_add()
+int usr::box_add()
 {
-	char data[DATA_LEN];
+	int data[DATA_LEN];
 	int i;
 	for(i=0;i<DATA_LEN;i++)
 	{
@@ -95,9 +95,9 @@ char usr::box_add()
 	return data[1];
 }
 
-int usr::connect_test(char box_id)
+int usr::connect_test(int box_id)
 {
-	char data[DATA_LEN];
+	int data[DATA_LEN];
 	int i;
 	for(i=0;i<DATA_LEN;i++)
 	{
@@ -108,9 +108,9 @@ int usr::connect_test(char box_id)
 	data[2]=0x02;
 	data[3]=0x3a;
 	data[4]=0x3a;
-	data[5]=0x0f;
+	data[5]=0xff;
 	data[6]=0x01;
-	data[7]=0x0f;
+	data[7]=0xff;
 	data[8]=0x0d;
 	data[9]=0x0a;
 	
@@ -123,7 +123,7 @@ int usr::connect_test(char box_id)
 	printf("usr connect test send msg:");
 	for(i=0;i<DATA_LEN;i++)
 	{
-		printf("%02X ",data[i]);
+		printf("%02x ",data[i]);
 	}
 	printf("\n");
 
@@ -136,7 +136,7 @@ int usr::connect_test(char box_id)
 	printf("usr connect test recv msg:");
 	for(i=0;i<DATA_LEN;i++)
 	{
-		printf("%02X ",data[i]);
+		printf("%02x ",data[i]);
 	}
 	printf("\n");
 

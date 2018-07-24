@@ -21,10 +21,10 @@ int main()
 		printf("ERROR:main box add error\n");
 		return -1;
 	}
-	printf("main my box_add successful\n");
+	printf("main my box_add %d successful\n",box_id);
 
 	sleep(1);
-	printf("main connect testing...\n");
+	printf("main box:%d connect testing...\n",box_id);
 	err=my.connect_test(box_id);
 	if(err==-1)
 	{
@@ -32,6 +32,24 @@ int main()
 		return -1;
 	}
 	printf("main my connect_test successful\n");
-	
+	/*
+	box_id=my.box_add();
+	if(box_id==-1)
+	{
+		printf("ERROR:main box add error\n");
+		return -1;
+	}
+	printf("main my box_add %d successful\n",box_id);
+
+	sleep(1);
+	printf("main box:%d connect testing...\n",box_id);
+	err=my.connect_test(box_id);
+	if(err==-1)
+	{
+		printf("ERROR:main connect test error\n");
+		return -1;
+	}
+	printf("main my connect_test successful\n");
+*/
 	return 0;
 }

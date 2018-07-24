@@ -153,7 +153,7 @@ int manage::talkback()
 {
 	printf("manage talkbacking...\n");
 	int i;
-	num=(int)parent_data[1];
+	num=parent_data[1];
 	memcpy(child_data,parent_data+2,CHILD_DATA_LEN);
 	err=child_msg.send_data(child_msgid, num, child_data,CHILD_DATA_LEN);
 	if(err==-1)
@@ -182,7 +182,7 @@ int manage::talkback()
 	printf("\n");
 
 	memcpy(parent_back_data+2,child_data,CHILD_DATA_LEN);
-	parent_back_data[1]=(char)num;
+	parent_back_data[1]=num;
 	return 0;
 }
 
