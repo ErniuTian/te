@@ -5,16 +5,7 @@ int main()
 	usr my;
 	int box_id1;
 	int box_id2;
-	int i,err;
-	char channel;
-	char param;
-	char params[40];
-	double data[2];
-
-	for(i=0;i<40;i++)
-		{
-		params[i]=0x00+i;
-		}
+	int err;
 
 	err=my.init();
 	if(err==-1)
@@ -49,34 +40,6 @@ int main()
 		return -1;
 	}
 	printf("main my box:%d connect_test1 successful\n",box_id1);
-
-	sleep(1);
-	printf("main box:%d param setting...\n",box_id1);
-	channel=0x13;
-	param=0x34;
-	err=my.param_set(box_id1, channel, param);
-	if(err==-1)
-		{
-		printf("ERROR:main param set error\n");
-		return -1;
-		}
-	printf("main box:%d param set sucessful\n",box_id1);
-	err=my.params_set(box_id1, params);
-	if(err==-1)
-		{
-		printf("ERROR:main box:%d params set error\n",box_id1);
-		return -1;
-		}
-	*/
-
-	err=my.data_get(box_id1,channel , data);
-	if(err==-1)
-		{
-		printf("ERROR:main box:%d data get error\n",box_id1);
-		return -1;
-		}
-	printf("main get data1:%f,data2:%f\n",data[0],data[1]);
-	/*
 	printf("main box:%d connect testing...\n",box_id2);
 	err=my.connect_test(box_id2);
 	if(err==-1)
@@ -85,7 +48,6 @@ int main()
 		return -1;
 	}
 	printf("main my box:%d connect_test2 successful\n",box_id2);
-	*/
 	printf("main is going to delete box:%d...\n",box_id1);
 	err=my.box_delete(box_id1);
 	if(err==-1)
@@ -94,7 +56,6 @@ int main()
 		return -1;
 	}
 	printf("main box:%d delete sucessful\n",box_id1);
-	/*
 	printf("main is going to delete box:%d...\n",box_id2);
 	err=my.box_delete(box_id2);
 	if(err==-1)

@@ -264,7 +264,7 @@ int usr::sensor_delete(char box_id,char sensor_id)
 {
 }
 
-int usr::data_get(char box_id,char sensor_id,double data[])
+int usr::data_get(char box_id,char sensor_id,float data[])
 {
 	int i,j,point[2];
 	int data_snd_len,data_rcv_len;
@@ -288,12 +288,12 @@ int usr::data_get(char box_id,char sensor_id,double data[])
 	err=data_transmit(data_snd_len, data_snd, data_rcv_len, data_rcv);
 	if(err==-1)
 		{
-		printf("ERROR:usr data get error\n");
+		printf("ERROR:usr param set error\n");
 		return -1;
 		}
 	if(data_rcv[0]==0x00)//data_rcv[5]-data_rcv[12]  data_rcv[13]-data_rcv[20]
 		{
-		printf("usr data get successful\n");
+		printf("usr param ser successful\n");
 		for(i=0;i<7;i++)
 			{
 			if(data_rcv[6+i]=='.')
@@ -305,14 +305,7 @@ int usr::data_get(char box_id,char sensor_id,double data[])
 			{
 			for(i=0;i<point[j];i++)
 				{
-				data[j]=data[j]+(data_rcv[6+i+8*j]-0x30)*pow(10,(point[j]-i-1));
-				}
-			}
-		for(j=0;j<2;j++)
-			{
-			for(i=0;i<6-point[j];i++)
-				{
-				data[j]=data[j]+(data_rcv[12-i+8*j]-0x30)*pow(10,(point[j]-6+i));
+				data[j]=data[j]+(data_rcv[6+i]-0x30)*(10^(point[j]-i));
 				}
 			}
 		if(data_rcv[5]=='-')

@@ -7,36 +7,35 @@ manage::manage()
 	
 	num=-1;
 	int i;
-	parent_back_data_len=0;
 	for(i=0;i<CLIENT_NUM;i++)
 	{
 		client_fd[i]=-1;
 	}
-	/*
 	for(i=0;i<CHILD_DATA_LEN;i++)
 	{
 		child_data[i]=0x00;
 	}
-	*/
-	memset(parent_data,0,DATA_LEN);
-	memset(parent_back_data,0,DATA_LEN);
+	for(i=0;i<DATA_LEN;i++)
+	{
+		parent_data[i]=0x00;
+		parent_back_data[i]=0x00;
+	}
 	child_msgid=-1;
 	parent_msgid=-1;
 	
 }
-
+/*
 manage::~manage()
 {
-	child_msg.msg_delete();
-	parent_msg.msg_delete();
-}
 
+}
+*/
 /*create a tcp link*/
 int manage::create()
 {
 	char *keypath1,*keypath2;
-	char key1[]="./key5";
-	char key2[]="./key6";
+	char key1[]="./key3";
+	char key2[]="./key4";
 	keypath1=key1;
 	keypath2=key2;
 	err=server_sock.tcp_create();
@@ -68,19 +67,17 @@ int manage::create()
 
 int manage::msg_handle()
 {
-	memset(parent_data,0,DATA_LEN);
-	memset(parent_back_data,0,DATA_LEN);
 	printf("manage msg recving...\n");	
 	int ret=0;
 	int i;
-	parent_data_len=parent_msg.recv_data(parent_msgid,1,parent_data,DATA_LEN);
-	if(parent_data_len==-1)
+	err=parent_msg.recv_data(parent_msgid,1,parent_data,DATA_LEN);
+	if(err==-1)
 	{
 		printf("ERROR:manage msg handle msg recv data error\n");
 		return -1;
 	}
 	printf("manage msg_handle recv parent data:");
-	for(i=0;i<parent_data_len;i++)
+	for(i=0;i<err;i++)
 	{
 		printf("%02X ",parent_data[i]);
 	}
@@ -91,58 +88,48 @@ int manage::msg_handle()
 		case 0x01:ret=talkback();break;
 		case 0x02:ret=client_delete();break;
 		case 0x03:manage_exit();
-		default:break;//parent_back_data[0]=0x02;
+		default:parent_back_data[0]=0x02;
 	}
+	
 	if(ret==-1)
-		{
-		printf("ERROR:manage msg_handle error\n");
-		return -1;
-		}
-	
-	return 0;
-}
-
-int manage::data_back(int len,char data[])
-{
-	int i;
-	err=parent_msg.send_data(parent_msgid, 2, data,len);
+	{
+		parent_back_data[0]=0x01;
+	}
+	else
+		parent_back_data[0]=0x00;
+		
+	err=parent_msg.send_data(parent_msgid, 2, parent_back_data,DATA_LEN);
 	if(err==-1)
-		{
-		printf("ERROR:manage data_back send error\n");
+	{
+		printf("ERROR:manage msg send data error\n");
 		return -1;
-		}
-	
-	printf("manage data_back:");
-	for(i=0;i<len;i++)
-		{
-		printf("%02X ",data[i]);
-		}
+	}
+	printf("manage msg_handle send parent back data:");
+	for(i=0;i<DATA_LEN;i++)
+	{
+		printf("%02X ",parent_back_data[i]);
+	}
 	printf("\n");
+	
 	return 0;
 }
-
 
 
 /*accpet a new client and create a child process*/
 /*time out ?*/
 int manage::client_add()
 {
-	parent_back_data_len=5;
-	//char parent_back_data[back_data_len];
-	//memset(parent_back_data,0,back_data_len);
 	num=num_get();
 	int i;
 	if(num==-1)
 	{
 		printf("manage:client num has reached max\n");
-		parent_back_data[0]=0x01;
 		return -1;
 	}
 	client_fd[num]=server_sock.tcp_accept();
 	if(client_fd[num]==-1)
 	{
 		printf("ERROR:manage no available client\n");
-		parent_back_data[0]=0x01;
 		return -1;
 	}
 	printf("manage get  client sockfd:%d\n",client_fd[num]);
@@ -150,72 +137,52 @@ int manage::client_add()
 	if(err==-1)
 	{
 		printf("ERROR:manage client_add error\n");
-		parent_back_data[0]=0x01;
 		return -1;
 	}
 	printf("manage child add sucessful\n");
+	for(i=0;i<DATA_LEN;i++)
+	{
+		parent_back_data[i]=0x00;
+	}
 	parent_back_data[1]=num;
-
-	err=data_back(parent_back_data_len, parent_back_data);
-	if(err==-1)
-		{
-		printf("ERROR:manage clien add data back error\n");
-		return -1;
-		}
 
 	return 0;
 }
 
 int manage::talkback()
 {
-	int child_data_len;
-	child_data_len=parent_data_len-2;
-	char child_data[DATA_LEN];
-	memset(child_data,0,DATA_LEN);
 	printf("manage talkbacking...\n");
 	int i;
 	num=(int)parent_data[1];
-	memcpy(child_data,parent_data+2,child_data_len);
-	err=child_msg.send_data(child_msgid, num, child_data,child_data_len);
+	memcpy(child_data,parent_data+2,CHILD_DATA_LEN);
+	err=child_msg.send_data(child_msgid, num, child_data,CHILD_DATA_LEN);
 	if(err==-1)
 	{
-		printf("ERROR:manage childmsg send data error\n");
-		parent_back_data[0]=0x01;
+		printf("manage childmsg send data error\n");
 		return -1;
 	}
 	printf("manage childmsg send data:");
-	for(i=0;i<child_data_len;i++)
+	for(i=0;i<CHILD_DATA_LEN;i++)
 	{
 		printf("%02X ",child_data[i]);
 	}
 	printf("\n");
 
-	child_data_len=child_msg.recv_data(child_msgid, num+9, child_data,CHILD_DATA_LEN);
-	if(child_data_len==-1)
+	err=child_msg.recv_data(child_msgid, num+9, child_data,CHILD_DATA_LEN);
+	if(err==-1)
 	{
 		printf("manage childmsg recv data error\n");
-		parent_back_data[0]=0x01;
 		return -1;
 	}
 	printf("manage childmsg recv data:");
-	for(i=0;i<child_data_len;i++)
+	for(i=0;i<CHILD_DATA_LEN;i++)
 	{
 		printf("%02X ",child_data[i]);
 	}
 	printf("\n");
 
-	parent_back_data_len=child_data_len+2;
-	
-	memcpy(parent_back_data+2,child_data,child_data_len);
-	
+	memcpy(parent_back_data+2,child_data,CHILD_DATA_LEN);
 	parent_back_data[1]=(char)num;
-	err=data_back(parent_back_data_len, parent_back_data);
-	if(err==-1)
-		{
-		printf("ERROR:manage talkback data_back error\n");
-		return -1;
-		}
-	
 	return 0;
 }
 
@@ -224,11 +191,9 @@ int manage::client_delete()
 	err=talkback();
 	if(err==-1)
 	{
-		printf("ERROR:manage client_delete error\n");
 		return -1;
 	}
 	client_fd[parent_data[1]]=-1;
-	printf("manage client_delete successful\n");
 	return 0;
 }
 

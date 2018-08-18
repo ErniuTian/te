@@ -218,45 +218,6 @@ int usr::param_set(char box_id,char channel, char param)
 		}
 }
 
-int usr::params_set(char box_id, char param[40])
-{
-	int i;
-	int data_snd_len,data_rcv_len;
-	data_snd_len=45;
-	data_rcv_len=5;
-
-	char data_snd[data_snd_len];
-	char data_rcv[data_rcv_len];
-	memset(data_snd,0,data_snd_len);
-	memset(data_rcv,0,data_rcv_len);
-
-	data_snd[0]=0x01;
-	data_snd[1]=box_id;
-	data_snd[2]=0x77;
-	data_snd[3]=0x00;
-	data_snd[4]=0x02;
-	memcpy(data_snd+5,param,40);
-
-	err=data_transmit(data_snd_len, data_snd, data_rcv_len, data_rcv);
-	if(err==-1)
-		{
-		printf("ERROR:usr param set error\n");
-		return -1;
-		}
-	if(data_rcv[0]==0x00)
-		{
-		printf("usr param ser successful\n");
-		return 0;
-		}
-	else 
-		{
-		printf("FAIL:usr param set failed\n");
-		err_num=data_rcv[0];
-		return -1;
-		}
-}
-
-
 int usr::sensor_add(char box_id,char sensor_id,char *param,char *data)
 {
 }
@@ -264,70 +225,8 @@ int usr::sensor_delete(char box_id,char sensor_id)
 {
 }
 
-int usr::data_get(char box_id,char sensor_id,double data[])
+int usr::data_get(char box_id,char sensor_id,char *data)
 {
-	int i,j,point[2];
-	int data_snd_len,data_rcv_len;
-	data_snd_len=6;
-	data_rcv_len=21;
-
-	data[0]=0;
-	data[1]=0;
-	char data_snd[data_snd_len];
-	char data_rcv[data_rcv_len];
-	memset(data_snd,0,data_snd_len);
-	memset(data_rcv,0,data_rcv_len);
-
-	data_snd[0]=0x01;
-	data_snd[1]=box_id;
-	data_snd[2]=0x21;
-	data_snd[3]=0x00;
-	data_snd[4]=0x01;
-	data_snd[5]=sensor_id;
-
-	err=data_transmit(data_snd_len, data_snd, data_rcv_len, data_rcv);
-	if(err==-1)
-		{
-		printf("ERROR:usr data get error\n");
-		return -1;
-		}
-	if(data_rcv[0]==0x00)//data_rcv[5]-data_rcv[12]  data_rcv[13]-data_rcv[20]
-		{
-		printf("usr data get successful\n");
-		for(i=0;i<7;i++)
-			{
-			if(data_rcv[6+i]=='.')
-				point[0]=i;
-			if(data_rcv[14+i]=='.')
-				point[1]=i;
-			}
-		for(j=0;j<2;j++)
-			{
-			for(i=0;i<point[j];i++)
-				{
-				data[j]=data[j]+(data_rcv[6+i+8*j]-0x30)*pow(10,(point[j]-i-1));
-				}
-			}
-		for(j=0;j<2;j++)
-			{
-			for(i=0;i<6-point[j];i++)
-				{
-				data[j]=data[j]+(data_rcv[12-i+8*j]-0x30)*pow(10,(point[j]-6+i));
-				}
-			}
-		if(data_rcv[5]=='-')
-			data[0]=data[0]*(-1);
-		if(data_rcv[13]=='-')
-			data[1]=data[1]*(-1);
-		
-		return 0;
-		}
-	else 
-		{
-		printf("FAIL:usr param set failed\n");
-		err_num=data_rcv[0];
-		return -1;
-		}
 }
 
 int usr::data_get_loop(char box_id,char sensor_id,char *data,int time)

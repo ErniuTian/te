@@ -2,7 +2,6 @@
 #define USR_H
 
 #include <iostream>
-#include <math.h>
 #include "../bll/manage.h"
 
 class usr
@@ -24,11 +23,10 @@ class usr
 		int connect_test(char box_id);
 		char box_add();
 		int box_delete(char box_id);
-		int param_set(char box_id,char channel, char param);
-		int params_set(char box_id, char param[40]);
+		int param_set(char box_id,char *param);
 		int sensor_add(char box_id,char sensor_id,char *param,char *data);
 		int sensor_delete(char box_id,char sensor_id);
-		int data_get(char box_id,char sensor_id,double data[]);
+		int data_get(char box_id,char sensor_id,char *data);
 		int data_get_loop(char box_id,char sensor_id,char *data,int time);
 };
 

@@ -15,12 +15,10 @@ class manage
 		int err;
 		int pid;
 		int num;
-		int parent_data_len;
-		int parent_back_data_len;
 		int client_fd[CLIENT_NUM];
 		int child_msgid;
 		int parent_msgid;
-		//char child_data[CHILD_DATA_LEN];
+		char child_data[CHILD_DATA_LEN];
 		char parent_data[DATA_LEN];
 		char parent_back_data[DATA_LEN];
 		tcp_link server_sock;
@@ -34,11 +32,9 @@ class manage
 		int talkback();
 		int manage_exit();
 		int num_get();
-		int data_back(int len,char data[]);
 
 	public:
 		manage();
-		~manage();
 		int create();
 		int msg_handle();
 
